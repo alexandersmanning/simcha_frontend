@@ -1,8 +1,13 @@
 import React from 'react';
 
 interface IProps {
-    name: string,
+    name?: string,
     helloText?: string
+    match: {
+        params: {
+            userId: string
+        }
+    }
 }
 
 interface IState {
@@ -13,7 +18,7 @@ interface IState {
 export class Hello extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
-        this.setState({ name: this.props.name, helloText: this.props.helloText || 'Hi'});
+        this.setState({ name: this.props.name || this.props.match.params.userId, helloText: this.props.helloText || 'Hi'});
     }
 
     render() {

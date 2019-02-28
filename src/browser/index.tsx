@@ -1,5 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
 import App from '../shared/app'
+import {BrowserRouter} from 'react-router-dom'
 
-render(<App name={"Spacey Keicy"} />, document.getElementById('root'));
+render(
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
+    , document.getElementById('root'));

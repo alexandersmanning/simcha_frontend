@@ -39,7 +39,7 @@ const serverConfig = {
     entry: './src/server.tsx',
     devtool: 'source-map',
     output: {
-        filename: 'js/server.js',
+        filename: 'server.js',
         path: path.resolve(__dirname, 'dist')
     },
     externals: [nodeExternals()],

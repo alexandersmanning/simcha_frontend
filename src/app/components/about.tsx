@@ -1,7 +1,12 @@
 import React from 'react';
 
 interface IAboutProps {
-    name: string,
+    name?: string,
+    match: {
+        params: {
+            userId: string
+        }
+    }
 }
 
 interface IAboutStore {
@@ -11,7 +16,7 @@ interface IAboutStore {
 export class About extends React.Component<IAboutProps, IAboutStore> {
     constructor(props: IAboutProps) {
         super(props);
-        this.setState({ name: this.props.name });
+        this.setState({ name: this.props.name || this.props.match.params.userId });
     }
 
     render() {

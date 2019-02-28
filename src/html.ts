@@ -8,7 +8,7 @@ const html = ({ body }: { body: string}): string => (
         </head>
         <body>
             <div id="root">${body}</div>
-            <script src="js/bundle.js"></script>
+            <script src="/dist/js/bundle.js" async></script>
         </body>
     </html>
     `

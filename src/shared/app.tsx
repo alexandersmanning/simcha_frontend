@@ -1,11 +1,13 @@
 import React from 'react';
-import { Hello} from "../app/components/hello";
+import { Hello} from "./hello";
+import {Route, Switch} from "react-router";
+import {About} from "../app/components/about";
 
-interface IAppProps {
-    name: string
-}
-export default (props: IAppProps) => {
+export default () => {
     return (
-        <Hello name={props.name}/>
+        <Switch>
+            <Route path="/about/:userId" component={About}/>
+            <Route path="/:userId" component={Hello}/>
+        </Switch>
     )
 }
