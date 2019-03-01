@@ -29,6 +29,7 @@ export default class Posts extends React.Component<{}, IPostState> {
             return res.json();
         }).then((posts) => {
             const statePosts:IPost[] = [];
+            if (!posts) return;
             posts.forEach((post: IPost) => {
                 statePosts.push({ author: { email: post.author.email }, body: post.body, title: post.title })
             });
