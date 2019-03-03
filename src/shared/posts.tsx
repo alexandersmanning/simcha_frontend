@@ -1,5 +1,6 @@
 import React from 'react';
-import fetch from 'isomorphic-fetch';
+import fetch from 'isomorphic-fetch'
+import AddPost from "./addPost";
 
 interface IPost {
     title: string;
@@ -25,7 +26,7 @@ export default class Posts extends React.Component<{}, IPostState> {
             headers: new Headers({
                 'Content-type': 'application/json',
             }),
-        }).then((res) => {
+        }).then((res: Response) => {
             return res.json();
         }).then((posts) => {
             const statePosts:IPost[] = [];
@@ -52,6 +53,7 @@ export default class Posts extends React.Component<{}, IPostState> {
                         )
                     })
                 }
+                <AddPost/>
             </div>
         );
     }

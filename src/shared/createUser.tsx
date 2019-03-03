@@ -1,23 +1,27 @@
 import React from 'react';
+import fetch from "isomorphic-fetch";
+import {Redirect} from "react-router";
 
-interface IUserFormState {
+interface IUserBody {
     email: string;
     password: string;
     confirmationPassword: string;
 }
 
-export default class UserForm extends React.Component<{}, IUserFormState> {
+export default class UserForm extends React.Component<{}, { loggedIn: boolean,  errors: string }> {
     private emailInput: HTMLInputElement;
-    private emailInputRef: (element: HTMLInputElement) => void;
+    private readonly emailInputRef: (element: HTMLInputElement) => void;
 
     private passwordInput: HTMLInputElement;
-    private passwordInputRef: (element: HTMLInputElement) => void;
+    private readonly passwordInputRef: (element: HTMLInputElement) => void;
 
     private confirmationPasswordInput: HTMLInputElement;
-    private confirmationPasswordInputRef: (element: HTMLInputElement) => void;
+    private readonly confirmationPasswordInputRef: (element: HTMLInputElement) => void;
 
     constructor(props: {}) {
         super(props);
+
+        this.state = { loggedIn: false, errors: '' };
         this.emailInputRef = (element: HTMLInputElement) => {
             this.emailInput = element;
         };
@@ -33,10 +37,36 @@ export default class UserForm extends React.Component<{}, IUserFormState> {
 
     onClickAction(e: React.FormEvent<HTMLElement>) {
         e.preventDefault();
-        // call create user action
+        const bodyType: IUserBody = {
+            email: this.emailInput.value,
+            password: this.passwordInput.value,
+            confirmationPassword: this.confirmationPasswordInput.value,
+        };
+
+        const headers: Headers = new Headers({
+            'Accept': 'application/json',
+            'Content-type': 'application/json',
+        });
+
+        fetch('http://localhost:8000/users', {
+            headers,
+            method: 'POST',
+            body: JSON.stringify(bodyType),
+        }).then((res: Response) => {
+            if (res.status !== 200) {
+                throw new Error('Could not create a new users')
+            }
+
+            this.setState(() => ({ loggedIn: true }))
+        }).catch((err) => {
+            this.setState(() => ({ errors: err }));
+        })
     }
 
     render() {
+        if (this.state.loggedIn) {
+            return <Redirect to='/posts'/>
+        }
         return (
             <form>
                 <label>
