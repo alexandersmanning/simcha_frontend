@@ -14,15 +14,18 @@
   "license": "ISC",
   "alias": {
     "react": "preact-compat",
-    "react-dom": "preact-compat"
+    "react-dom": "preact-compat",
+    "react-redux": "preact-redux"
   },
   "dependencies": {
     "express": "^4.16.4",
     "isomorphic-fetch": "^2.2.1",
     "preact": "^8.4.2",
     "preact-compat": "^3.18.4",
+    "preact-redux": "^2.0.3",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
+    "redux": "^4.0.1",
     "typescript": "^3.3.3333"
   },
   "devDependencies": {
@@ -30,8 +33,10 @@
     "@types/isomorphic-fetch": "0.0.35",
     "@types/react": "^16.8.4",
     "@types/react-dom": "^16.8.2",
+    "@types/react-redux": "^7.0.1",
     "@types/react-router": "^4.4.4",
     "@types/react-router-dom": "^4.3.1",
+    "@types/redux": "^3.6.0",
     "html-webpack-plugin": "^3.2.0",
     "react": "github:preact-compat/react",
     "react-dom": "github:preact-compat/react-dom",

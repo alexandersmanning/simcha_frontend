@@ -13,6 +13,7 @@ const browserConfig = {
         alias: {
             "react": "preact-compat",
             "react-dom": "preact-compat",
+            "react-redux": "preact-redux",
         },
         extensions: ['.js', '.jsx', '.json', '.ts', '.tsx']
     },
@@ -47,6 +48,7 @@ const serverConfig = {
         alias: {
             "react": "preact-compat",
             "react-dom": "preact-compat",
+            "react-redux": "preact-redux",
         },
         extensions: ['.js', '.jsx', '.json', '.ts', '.tsx']
     },

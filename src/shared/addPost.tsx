@@ -40,7 +40,7 @@ export default class AddPost extends React.Component<{}, {}> {
             if (!res.ok) {
                 throw new Error('Something Went Wrong');
             }
-            return res.json()
+            return res.json();
         }).then((post) => {
             console.log(post);
         }).catch((err) => {
