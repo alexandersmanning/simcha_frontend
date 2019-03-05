@@ -1,15 +1,26 @@
 import React, {FormEvent} from 'react';
 import fetch from 'isomorphic-fetch';
+import userReducer from "../reducers/userReducer";
+import {connect} from "react-redux";
+import {loginUser} from "../actions/userActions";
 
-export default class Login extends React.Component<{}, {}> {
+interface ILoginProps {
+    user: {
+        id: string;
+        email: string;
+    },
+    login: (email: string, id: string) => void;
+}
+
+class Login extends React.Component<ILoginProps, {}> {
     private email: HTMLInputElement;
     private readonly emailRef: (element: HTMLInputElement) => void;
 
     private password: HTMLInputElement;
     private readonly passwordRef: (element: HTMLInputElement) => void;
 
-    constructor(props: {}) {
-        super(props)
+    constructor(props: ILoginProps) {
+        super(props);
         this.emailRef = (element) => {
             this.email = element;
         };
@@ -42,14 +53,22 @@ export default class Login extends React.Component<{}, {}> {
             }
 
             return res.json();
-        }).then(() => {
-            console.log('logged in')
+        }).then(({ email, id }: { email: string, id: string }) => {
+            this.props.login(email, id);
         }).catch((err) => {
             console.log(err);
         })
     }
 
     render() {
+        if (this.props.user.id && this.props.user.email) {
+            return (
+                <div>
+                    <span>Welcome {this.props.user.email}</span>
+                </div>
+            )
+        }
+
         return(
             <form>
                 <label>
@@ -65,3 +84,20 @@ export default class Login extends React.Component<{}, {}> {
         )
     }
 }
+
+const mapStateToProps = (state: any, action: any) => {
+    return {
+        user: userReducer(state.user, action),
+    }
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        login(email: string, id: string){
+            dispatch(loginUser({ email, id }));
+        }
+    }
+};
+
+const LoginComponent = connect(mapStateToProps, mapDispatchToProps)(Login);
+export default LoginComponent;

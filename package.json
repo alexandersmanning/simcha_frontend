@@ -6,7 +6,7 @@
   "scripts": {
     "watcher": "webpack --watch",
     "server": "node dist/server.js",
-    "server-debug": "node debug dist/server.js",
+    "server-debug": "node inspect dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

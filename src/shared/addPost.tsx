@@ -1,14 +1,26 @@
 import React, {FormEvent} from 'react';
 import fetch from 'isomorphic-fetch';
+import userReducer from "../reducers/userReducer";
+import {connect} from "react-redux";
+import {IPost} from "./posts";
+import {addPost} from "../actions/postActions";
 
-export default class AddPost extends React.Component<{}, {}> {
+interface IAddPostProps {
+    user: {
+        id: string;
+        email: string;
+    },
+    addPost: (post: IPost) => void,
+}
+
+class AddPost extends React.Component<IAddPostProps, {}> {
     private title: HTMLInputElement;
     private readonly titleRef: (element: HTMLInputElement) => void;
 
     private body: HTMLTextAreaElement;
     private readonly bodyRef: (element: HTMLTextAreaElement) => void;
 
-    constructor(props: {}) {
+    constructor(props: IAddPostProps) {
         super(props);
         this.titleRef = (element: HTMLInputElement) => {
             this.title = element;
@@ -41,14 +53,20 @@ export default class AddPost extends React.Component<{}, {}> {
                 throw new Error('Something Went Wrong');
             }
             return res.json();
-        }).then((post) => {
-            console.log(post);
+        }).then((post: IPost) => {
+            this.props.addPost(post);
         }).catch((err) => {
             console.log(err);
         })
     }
 
     render() {
+        if (!this.props.user.id) {
+            return (
+                <div>Login to add a post!</div>
+            )
+        }
+
         return (
             <div>
                 <div>Add a post here!</div>
@@ -67,3 +85,20 @@ export default class AddPost extends React.Component<{}, {}> {
         )
     }
 }
+
+const mapStateToProps = (state: any, action: any) => {
+    return {
+        user: userReducer(state.user, action),
+    };
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        addPost(post: IPost) {
+            dispatch(addPost(post));
+        },
+    }
+};
+
+const AddPostComponent = connect(mapStateToProps, mapDispatchToProps)(AddPost);
+export default AddPostComponent;

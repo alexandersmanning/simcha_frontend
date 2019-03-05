@@ -2,7 +2,8 @@ import React from 'react';
 import fetch from 'isomorphic-fetch'
 import AddPost from "./addPost";
 
-interface IPost {
+export interface IPost {
+    id: string,
     title: string;
     body: string;
     author: {
@@ -32,7 +33,7 @@ export default class Posts extends React.Component<{}, IPostState> {
             const statePosts:IPost[] = [];
             if (!posts) return;
             posts.forEach((post: IPost) => {
-                statePosts.push({ author: { email: post.author.email }, body: post.body, title: post.title })
+                statePosts.push({ author: { email: post.author.email }, body: post.body, title: post.title, id: post.id })
             });
 
             return this.setState({ posts: statePosts });
