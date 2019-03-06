@@ -17,10 +17,12 @@ const server = express();
 server.use('*/js', express.static("dist/js"));
 
 server.get('**', (req: express.Request, res: express.Response) => {
+    console.log(req.headers);
     fetch('http://localhost:8000/currentUser', {
         method: 'GET',
         credentials: 'include',
         headers: new Headers({
+            'Cookie': req.header('Cookie'),
             'Content-type': 'application/json',
             'Accept': 'application/json',
         }),
