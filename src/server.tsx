@@ -3,11 +3,13 @@ import React from 'react';
 import { renderToString } from 'react-dom/server';
 import html from './html';
 import App from './shared/app';
-import { createStore } from 'redux';
+import {applyMiddleware, createStore} from 'redux';
 import { Provider } from 'react-redux';
 import {StaticRouter} from "react-router";
 import reducer from "./reducer";
 import fetch from 'isomorphic-fetch';
+import {createPost, getPosts} from "./middleware/postsMiddleware";
+import {loginUser} from "./middleware/userMiddleware";
 
 const port: number = 3000;
 const server = express();
@@ -35,7 +37,7 @@ server.get('**', (req: express.Request, res: express.Response) => {
             };
         }
 
-        const store = createStore(reducer, initialState);
+        const store = createStore(reducer, initialState, applyMiddleware(createPost, getPosts, loginUser));
         const context = {};
         const body = renderToString(
             <Provider store={store}>

@@ -1,6 +1,8 @@
 import React from 'react';
-import fetch from 'isomorphic-fetch'
 import AddPost from "./addPost";
+import postReducer from "../reducers/postReducer";
+import {connect} from "react-redux";
+import {getPosts, receivePosts} from "../actions/postActions";
 
 export interface IPost {
     id: string,
@@ -11,40 +13,25 @@ export interface IPost {
     }
 }
 
-interface IPostState {
-    posts: IPost[]
+interface IPostProps {
+    posts: IPost[];
+    getPosts: () => void;
 }
 
-export default class Posts extends React.Component<{}, IPostState> {
-    constructor(props: {}) {
+class Posts extends React.Component<IPostProps, {}> {
+    constructor(props: IPostProps) {
         super(props);
-        this.state = { posts: [] };
     }
 
     componentDidMount(): void {
-        fetch('http://localhost:8000/posts', {
-            method: 'GET',
-            headers: new Headers({
-                'Content-type': 'application/json',
-            }),
-        }).then((res: Response) => {
-            return res.json();
-        }).then((posts) => {
-            const statePosts:IPost[] = [];
-            if (!posts) return;
-            posts.forEach((post: IPost) => {
-                statePosts.push({ author: { email: post.author.email }, body: post.body, title: post.title, id: post.id })
-            });
-
-            return this.setState({ posts: statePosts });
-        })
+        this.props.getPosts();
     }
 
     render() {
         return (
             <div>
                 {
-                    this.state.posts.map((post: IPost) => {
+                    this.props.posts.map((post: IPost) => {
                         return (
                             <div>
                                 <div>Email: {post.author.email}</div>
@@ -59,3 +46,20 @@ export default class Posts extends React.Component<{}, IPostState> {
         );
     }
 }
+
+const mapStateToProps = (state: any, action: any) => {
+    return {
+        posts: postReducer(state.posts, action),
+    }
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        getPosts: () => {
+            dispatch(getPosts())
+        }
+    }
+};
+
+const PostsComponent = connect(mapStateToProps, mapDispatchToProps)(Posts);
+export default PostsComponent;

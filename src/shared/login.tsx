@@ -1,15 +1,14 @@
 import React, {FormEvent} from 'react';
-import fetch from 'isomorphic-fetch';
 import userReducer from "../reducers/userReducer";
 import {connect} from "react-redux";
-import {loginUser} from "../actions/userActions";
+import {getUser } from "../actions/userActions";
 
 interface ILoginProps {
     user: {
         id: string;
         email: string;
     },
-    login: (email: string, id: string) => void;
+    login: (email: string, password: string) => void;
 }
 
 class Login extends React.Component<ILoginProps, {}> {
@@ -32,32 +31,7 @@ class Login extends React.Component<ILoginProps, {}> {
 
     onSubmit(e: FormEvent<HTMLElement>) {
         e.preventDefault();
-        const bodyInput = {
-            email: this.email.value,
-            password: this.password.value,
-        };
-
-        const headers: Headers = new Headers({
-            'Content-type': 'application/json',
-            'Accept': 'application/json',
-        });
-
-        fetch('http://localhost:8000/login', {
-            method: 'POST',
-            body: JSON.stringify(bodyInput),
-            headers,
-            credentials: 'include',
-        }).then((res: Response) => {
-            if (!res.ok) {
-                throw new Error('Response is not ok');
-            }
-
-            return res.json();
-        }).then(({ email, id }: { email: string, id: string }) => {
-            this.props.login(email, id);
-        }).catch((err) => {
-            console.log(err);
-        })
+        this.props.login(this.email.value, this.password.value);
     }
 
     render() {
@@ -93,8 +67,8 @@ const mapStateToProps = (state: any, action: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        login(email: string, id: string){
-            dispatch(loginUser({ email, id }));
+        login(email: string, password: string){
+            dispatch(getUser({ email, password }));
         }
     }
 };

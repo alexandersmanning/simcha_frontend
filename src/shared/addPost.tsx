@@ -1,16 +1,14 @@
 import React, {FormEvent} from 'react';
-import fetch from 'isomorphic-fetch';
 import userReducer from "../reducers/userReducer";
 import {connect} from "react-redux";
-import {IPost} from "./posts";
-import {addPost} from "../actions/postActions";
+import {createPost} from "../actions/postActions";
 
 interface IAddPostProps {
     user: {
         id: string;
         email: string;
     },
-    addPost: (post: IPost) => void,
+    createPost: (post: { body: string, title: string }, callback: () => void) => void,
 }
 
 class AddPost extends React.Component<IAddPostProps, {}> {
@@ -38,26 +36,10 @@ class AddPost extends React.Component<IAddPostProps, {}> {
             body: this.body.value,
         };
 
-        const headers: Headers = new Headers({
-            'Content-type': 'application/json',
-            'Accept': 'application/json',
+        this.props.createPost(bodyInput, () => {
+            this.title.value = '';
+            this.body.value = '';
         });
-
-        fetch('http://localhost:8000/posts', {
-            method: 'POST',
-            credentials: 'include',
-            body: JSON.stringify(bodyInput),
-            headers,
-        }).then((res: Response) => {
-            if (!res.ok) {
-                throw new Error('Something Went Wrong');
-            }
-            return res.json();
-        }).then((post: IPost) => {
-            this.props.addPost(post);
-        }).catch((err) => {
-            console.log(err);
-        })
     }
 
     render() {
@@ -94,8 +76,8 @@ const mapStateToProps = (state: any, action: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        addPost(post: IPost) {
-            dispatch(addPost(post));
+        createPost(post: { body: string, title: string }, callback: () => void) {
+            dispatch(createPost(post, callback));
         },
     }
 };
