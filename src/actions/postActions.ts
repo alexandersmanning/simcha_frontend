@@ -34,3 +34,10 @@ export const getPosts = () => {
         type: GET_POSTS,
     };
 };
+
+export const deletePost = (id: number) => {
+    return {
+        type: DELETE_POST,
+        payload: id,
+    }
+};

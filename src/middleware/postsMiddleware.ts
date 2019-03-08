@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import {addPost, CREATE_POST, GET_POSTS, receivePosts} from "../actions/postActions";
+import {addPost, CREATE_POST, DELETE_POST, GET_POSTS, receivePosts} from "../actions/postActions";
 import {IPost} from "../shared/posts";
 import {AnyAction, Dispatch} from "redux";
 
@@ -18,7 +18,7 @@ export const getPosts = (store: any) => (next: Dispatch<AnyAction>) => (action: 
         const statePosts:IPost[] = [];
         if (!posts) return;
         posts.forEach((post: IPost) => {
-            statePosts.push({ author: { email: post.author.email }, body: post.body, title: post.title, id: post.id })
+            statePosts.push({ author: { id: post.author.id, email: post.author.email }, body: post.body, title: post.title, id: post.id })
         });
 
         store.dispatch(receivePosts(statePosts));
@@ -49,4 +49,24 @@ export const createPost = (store: any) => (next: Dispatch<AnyAction>) => (action
     }).catch((err) => {
         console.log(err);
     })
+};
+
+export const deletePost = (store: any) => (next: Dispatch<AnyAction>) => (action: any) => {
+    if (action.type !== DELETE_POST) return next(action);
+
+    const headers = new Headers({
+        'Accept': 'application/json',
+    });
+
+    fetch(`http://localhost:8000/posts/${action.payload}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers,
+    }).then((res: Response) => {
+        return res.json();
+    }).then(() => {
+        return next(action)
+    }).catch((err) => {
+        console.log(err)
+    });
 };

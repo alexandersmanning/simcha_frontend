@@ -5,7 +5,7 @@ import {BrowserRouter} from 'react-router-dom'
 import {applyMiddleware, createStore} from "redux";
 import {Provider} from "react-redux";
 import reducer from "../reducer";
-import {createPost, getPosts} from "../middleware/postsMiddleware";
+import {createPost, deletePost, getPosts} from "../middleware/postsMiddleware";
 import {loginUser} from "../middleware/userMiddleware";
 
 declare global{
@@ -17,7 +17,7 @@ declare global{
 const preloadedState = window.__PRELOADED_STATE__;
 delete window.__PRELOADED_STATE__;
 
-const store = createStore(reducer, preloadedState, applyMiddleware(createPost, getPosts, loginUser));
+const store = createStore(reducer, preloadedState, applyMiddleware(createPost, getPosts, deletePost, loginUser));
 
 render(
     <Provider store={store}>
