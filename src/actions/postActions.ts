@@ -1,7 +1,8 @@
-import {IPost} from "../shared/posts";
+import {IPost} from "../shared/postComponents/posts";
 
 export const ADD_POST = 'ADD_POST';
 export const EDIT_POST = 'EDIT_POST';
+export const UPDATE_POST = 'UPDATE_POST';
 export const DELETE_POST = 'DELETE_POST';
 export const RECEIVE_POSTS = 'RECEIVE_POSTS';
 export const GET_POSTS = 'GET_POSTS';
@@ -39,5 +40,19 @@ export const deletePost = (id: number) => {
     return {
         type: DELETE_POST,
         payload: id,
+    }
+};
+
+export const editPost = (post: { id: string, title: string, body: string }) => {
+    return {
+        type: EDIT_POST,
+        payload: post,
+    }
+};
+
+export const updatePost = (post: IPost) => {
+    return {
+        type: UPDATE_POST,
+        payload: post,
     }
 };

@@ -1,6 +1,14 @@
 import fetch from 'isomorphic-fetch'
-import {addPost, CREATE_POST, DELETE_POST, GET_POSTS, receivePosts} from "../actions/postActions";
-import {IPost} from "../shared/posts";
+import {
+    addPost,
+    CREATE_POST,
+    DELETE_POST, EDIT_POST,
+    GET_POSTS,
+    receivePosts,
+    UPDATE_POST,
+    updatePost
+} from "../actions/postActions";
+import {IPost} from "../shared/postComponents/posts";
 import {AnyAction, Dispatch} from "redux";
 
 export const getPosts = (store: any) => (next: Dispatch<AnyAction>) => (action: any) => {
@@ -69,4 +77,25 @@ export const deletePost = (store: any) => (next: Dispatch<AnyAction>) => (action
     }).catch((err) => {
         console.log(err)
     });
+};
+
+export const editPost = (store: any) => (next: Dispatch<AnyAction>) => (action: any) => {
+    if (action.type !== EDIT_POST) return next(action);
+
+    const headers = new Headers({
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+    });
+
+    fetch(`http://localhost:8000/posts/${action.payload.id}`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers,
+    }).then((res: Response) => res.json())
+        .then(() => {
+            store.dispatch(updatePost(action.payload));
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 };

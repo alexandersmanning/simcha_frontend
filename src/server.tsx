@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import {StaticRouter} from "react-router";
 import reducer from "./reducer";
 import fetch from 'isomorphic-fetch';
-import {createPost, deletePost, getPosts} from "./middleware/postsMiddleware";
+import {createPost, deletePost, getPosts, editPost} from "./middleware/postsMiddleware";
 import {loginUser} from "./middleware/userMiddleware";
 
 const port: number = 3000;
@@ -38,7 +38,7 @@ server.get('**', (req: express.Request, res: express.Response) => {
             };
         }
 
-        const store = createStore(reducer, initialState, applyMiddleware(createPost, getPosts, deletePost, loginUser));
+        const store = createStore(reducer, initialState, applyMiddleware(createPost, getPosts, deletePost, editPost, loginUser));
         const context = {};
         const body = renderToString(
             <Provider store={store}>

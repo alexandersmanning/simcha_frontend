@@ -1,9 +1,9 @@
 import React, {DOMElement, FormEvent} from 'react';
 import AddPost from "./addPost";
-import postReducer from "../reducers/postReducer";
+import postReducer from "../../reducers/postReducer";
 import {connect} from "react-redux";
-import {deletePost, getPosts, receivePosts} from "../actions/postActions";
-import userReducer from "../reducers/userReducer";
+import {deletePost, getPosts, receivePosts} from "../../actions/postActions";
+import userReducer from "../../reducers/userReducer";
 
 export interface IPost {
     id: string,
@@ -80,7 +80,7 @@ const mapDispatchToProps = (dispatch: any) => {
         },
         deletePost: (id: number) => {
             dispatch(deletePost(id))
-        }
+        },
     }
 };
 

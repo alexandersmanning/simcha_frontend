@@ -1,5 +1,5 @@
 import {ADD_POST, DELETE_POST, RECEIVE_POSTS} from "../actions/postActions";
-import {IPost} from "../shared/posts";
+import {IPost} from "../shared/postComponents/posts";
 
 const postReducer = (state: IPost[] = [], action: any) => {
     switch(action.type) {
