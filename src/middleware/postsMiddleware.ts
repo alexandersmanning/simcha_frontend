@@ -10,17 +10,21 @@ import {
 } from "../actions/postActions";
 import {IPost} from "../shared/postComponents/posts";
 import {AnyAction, Dispatch} from "redux";
+import {setToken} from "../actions/tokenActions";
 
 export const getPosts = (store: any) => (next: Dispatch<AnyAction>) => (action: any) => {
     if (action.type !== GET_POSTS) return next(action);
 
     fetch('http://localhost:8000/posts', {
         method: 'GET',
+        credentials: 'include',
         headers: new Headers({
             'Content-type': 'application/json',
             'Accept': 'application/json',
         }),
     }).then((res: Response) => {
+        let resToken = res.headers.get('X-CSRF-Token');
+        resToken && store.dispatch(setToken(resToken));
         return res.json();
     }).then((posts) => {
         const statePosts:IPost[] = [];
@@ -35,10 +39,12 @@ export const getPosts = (store: any) => (next: Dispatch<AnyAction>) => (action: 
 
 export const createPost = (store: any) => (next: Dispatch<AnyAction>) => (action: any) => {
     if (action.type !== CREATE_POST) return next(action);
+    const token = store.getState().token;
 
     const headers: Headers = new Headers({
         'Content-type': 'application/json',
         'Accept': 'application/json',
+        'X-CSRF-Token': token,
     });
 
     fetch('http://localhost:8000/posts', {
@@ -50,6 +56,9 @@ export const createPost = (store: any) => (next: Dispatch<AnyAction>) => (action
         if (!res.ok) {
             throw new Error('Something Went Wrong');
         }
+
+        let resToken = res.headers.get('X-CSRF-Token');
+        resToken && store.dispatch(setToken(resToken));
         return res.json();
     }).then((post: IPost) => {
         store.dispatch(addPost(post));
@@ -61,9 +70,11 @@ export const createPost = (store: any) => (next: Dispatch<AnyAction>) => (action
 
 export const deletePost = (store: any) => (next: Dispatch<AnyAction>) => (action: any) => {
     if (action.type !== DELETE_POST) return next(action);
+    const token = store.getState().token;
 
     const headers = new Headers({
         'Accept': 'application/json',
+        'X-CSRF-Token': token,
     });
 
     fetch(`http://localhost:8000/posts/${action.payload}`, {
@@ -71,6 +82,8 @@ export const deletePost = (store: any) => (next: Dispatch<AnyAction>) => (action
         credentials: 'include',
         headers,
     }).then((res: Response) => {
+        let resToken = res.headers.get('X-CSRF-Token');
+        resToken && store.dispatch(setToken(resToken));
         return res.json();
     }).then(() => {
         return next(action)
@@ -81,18 +94,23 @@ export const deletePost = (store: any) => (next: Dispatch<AnyAction>) => (action
 
 export const editPost = (store: any) => (next: Dispatch<AnyAction>) => (action: any) => {
     if (action.type !== EDIT_POST) return next(action);
+    const token = store.getState().token;
 
     const headers = new Headers({
         'Content-type': 'application/json',
         'Accept': 'application/json',
+        'X-CSRF-Token': token,
     });
 
     fetch(`http://localhost:8000/posts/${action.payload.id}`, {
         method: 'PUT',
         credentials: 'include',
         headers,
-    }).then((res: Response) => res.json())
-        .then(() => {
+    }).then((res: Response) => {
+        let resToken = res.headers.get('X-CSRF-Token');
+        resToken && store.dispatch(setToken(resToken));
+        return res.json()
+    }).then(() => {
             store.dispatch(updatePost(action.payload));
         })
         .catch((err) => {

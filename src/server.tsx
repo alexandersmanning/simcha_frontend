@@ -17,6 +17,7 @@ const server = express();
 server.use('*/js', express.static("dist/js"));
 
 server.get('**', (req: express.Request, res: express.Response) => {
+    let initialState: any = {};
     fetch('http://localhost:8000/currentUser', {
         method: 'GET',
         credentials: 'include',
@@ -26,15 +27,13 @@ server.get('**', (req: express.Request, res: express.Response) => {
             'Accept': 'application/json',
         }),
     }).then((res: Response) => {
+        initialState.token = res.headers.get('X-CSRF-token');
         return res.json();
     }).then((user) => {
-        let initialState = {};
         if (user.id && user.email) {
-            initialState = {
-                user: {
-                    id: user.id || null,
-                    email: user.email,
-                }
+            initialState.user = {
+                id: user.id || null,
+                email: user.email,
             };
         }
 
