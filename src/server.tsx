@@ -14,7 +14,9 @@ import {loginUser} from "./middleware/userMiddleware";
 const port: number = 3000;
 const server = express();
 
+server.use(express.static(__dirname + 'js'));
 server.use('*/js', express.static("dist/js"));
+// server.use('*.chunk.js', express.static("dist/js"));
 
 server.get('**', (req: express.Request, res: express.Response) => {
     let initialState: any = {};

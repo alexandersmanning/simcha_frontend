@@ -3,12 +3,15 @@ const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 
 const browserConfig = {
+    mode: 'development',
     target: "web",
     entry: './src/browser/index.tsx',
     devtool: 'source-map',
     output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: 'js/bundle.js',
+        path: path.resolve(__dirname, 'dist', 'js'),
+        filename: '[name].bundle.js',
+        chunkFilename: '[name].chunk.js',
+        publicPath: '/dist/js/',
     },
     resolve: {
         alias: {
@@ -62,7 +65,11 @@ const serverConfig = {
             { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
         ]
     },
-
+    plugins: [
+        new webpack.DefinePlugin({
+            __isBrowser__: false,
+        }),
+    ]
 };
 
 module.exports = [browserConfig, serverConfig];

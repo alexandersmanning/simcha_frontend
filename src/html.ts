@@ -8,10 +8,10 @@ const html = ({ body, preloadedState }: { body: string, preloadedState: {} }): s
             <script>
                 window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)}
             </script>
+            <script defer src="/dist/js/main.bundle.js"></script>
         </head>
         <body>
             <div id="root">${body}</div>
-            <script src="/dist/js/bundle.js" async></script>
         </body>
     </html>
     `
