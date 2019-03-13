@@ -4,25 +4,29 @@ import LoginComponent from './login'
 import asyncComponent from "./asyncComponent";
 
 const AboutComponent = asyncComponent(() => (
-    import( /* webpackChunkName: "about" */ '../app/components/about').then((module: any) => {
-        return module.App;
+    // @ts-ignore
+    System.import( /* webpackChunkName: "about" */ '../app/components/about').then((module: any) => {
+        return module.About;
     })
 ));
 
 const Posts = asyncComponent(() => {
-    return import(/* webpackChunkName: "posts" */ './postComponents/posts').then((module: any) => {
+    // @ts-ignore
+    return System.import(/* webpackChunkName: "posts" */ './postComponents/posts').then((module: any) => {
         return module.default;
     });
 });
 
 const UserForm = asyncComponent(() => {
-    return import(/* webpackChunkName: "createUser" */ './createUser').then((module: any) => {
+    // @ts-ignore
+    return System.import(/* webpackChunkName: "createUser" */ './createUser').then((module: any) => {
         return module.default;
     });
 });
 
 const Hello = asyncComponent(() => {
-    return import(/* webpackChunkName: "hello" */ './hello').then((module: any) => {
+    // @ts-ignore
+    return System.import(/* webpackChunkName: "hello" */ './hello').then((module: any) => {
         return module.Hello;
     });
 });
