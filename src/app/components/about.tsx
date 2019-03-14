@@ -20,6 +20,7 @@ export class About extends React.Component<IAboutProps, IAboutStore> {
     }
 
     render() {
+        debugger
         return (
             <div>
                 <div>This is the about page</div>
