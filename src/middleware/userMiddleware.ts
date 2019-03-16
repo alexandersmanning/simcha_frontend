@@ -1,28 +1,28 @@
 import {AnyAction, Dispatch} from "redux";
-import {GET_USER, setUser} from "../actions/userActions";
+import {GET_USER, LOGOUT, setUser} from "../actions/userActions";
+import {simchaFetch} from "../utils/fetchUtil";
+import {handleCSRF} from "../utils/middlewareHelpers";
 
-export const loginUser = (state: any) => (next: Dispatch<AnyAction>) => (action: any) => {
+export const loginUser = (store: any) => (next: Dispatch<AnyAction>) => (action: any) => {
     if (action.type !== GET_USER) return next(action);
 
-    const headers: Headers = new Headers({
-        'Content-type': 'application/json',
-        'Accept': 'application/json',
-    });
+    simchaFetch('login', { method: 'POST', body: action.payload })
+        .then(({ token, data }: { token: string, data: any }) => {
+            handleCSRF(store, token);
+            store.dispatch(setUser(data));
+        }).catch((err) => {
+            console.log(err);
+        })
+};
 
-    fetch('http://localhost:8000/login', {
-        method: 'POST',
-        body: JSON.stringify(action.payload),
-        headers,
-        credentials: 'include',
-    }).then((res: Response) => {
-        if (!res.ok) {
-            throw new Error('Response is not ok');
-        }
+export const logoutUser = (store: any) => (next: Dispatch<AnyAction>) => (action: any) => {
+    if (action.type !== LOGOUT) return next(action);
 
-        return res.json();
-    }).then((user) => {
-        state.dispatch(setUser(user));
-    }).catch((err) => {
-        console.log(err);
-    })
+    simchaFetch('logout', { method: 'GET' })
+        .then(({ token }: { token: string }) => {
+            handleCSRF(store, token);
+            return next(action);
+        }).catch((err) => {
+            console.log(err);
+        });
 };

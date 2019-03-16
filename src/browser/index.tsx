@@ -6,7 +6,7 @@ import {applyMiddleware, createStore} from "redux";
 import {Provider} from "react-redux";
 import reducer from "../reducer";
 import {createPost, deletePost, getPosts, editPost} from "../middleware/postsMiddleware";
-import {loginUser} from "../middleware/userMiddleware";
+import {loginUser, logoutUser} from "../middleware/userMiddleware";
 
 declare global{
     interface Window {
@@ -17,7 +17,7 @@ declare global{
 const preloadedState = window.__PRELOADED_STATE__;
 delete window.__PRELOADED_STATE__;
 
-const store = createStore(reducer, preloadedState, applyMiddleware(createPost, getPosts, deletePost, editPost, loginUser));
+const store = createStore(reducer, preloadedState, applyMiddleware(createPost, getPosts, deletePost, editPost, loginUser, logoutUser));
 
 render(
     <Provider store={store}>

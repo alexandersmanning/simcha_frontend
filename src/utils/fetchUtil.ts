@@ -2,11 +2,12 @@ import fetch from 'isomorphic-fetch';
 
 interface IFetchParams {
     method: 'GET' | 'POST' | 'PUT' | 'DELETE';
-    headers: Headers;
+    headers?: Headers;
     body?: {},
-    crsfToken?: string,
+    csrfToken?: string,
 }
-const simchaFetch = (path: string, { method, headers, body, crsfToken }: IFetchParams) => {
+
+export const simchaFetch = (path: string, { method, headers, body, csrfToken }: IFetchParams) => {
     const url: string = 'http://localhost:8000';
     const requestHeaders = new Headers({
         'Content-type': 'application/json',
@@ -18,12 +19,21 @@ const simchaFetch = (path: string, { method, headers, body, crsfToken }: IFetchP
         credentials: 'include',
     };
 
-    if (method === 'POST' || method === 'PUT') {
-        requestHeaders.set('X-CSRF-Token', crsfToken);
-        options.body = body;
+    if (csrfToken) {
+        requestHeaders.set('X-CSRF-Token', csrfToken);
     }
 
-    options.headers = { ...requestHeaders, ...headers };
+    if (body) {
+        options.body = JSON.stringify(body);
+    }
+
+    options.headers = requestHeaders;
+
+    if (headers) {
+        headers.forEach((val, key) => {
+            options.headers.set(key, val);
+        });
+    }
 
     return fetch(`${url}/${path}`, options).then((res) => {
         const resToken = res.headers.get('X-CSRF-Token');

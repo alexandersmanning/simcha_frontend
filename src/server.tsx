@@ -9,7 +9,7 @@ import {StaticRouter} from "react-router";
 import reducer from "./reducer";
 import fetch from 'isomorphic-fetch';
 import {createPost, deletePost, getPosts, editPost} from "./middleware/postsMiddleware";
-import {loginUser} from "./middleware/userMiddleware";
+import {loginUser, logoutUser} from "./middleware/userMiddleware";
 
 const port: number = 3000;
 const server = express();
@@ -39,7 +39,7 @@ server.get('**', (req: express.Request, res: express.Response) => {
             };
         }
 
-        const store = createStore(reducer, initialState, applyMiddleware(createPost, getPosts, deletePost, editPost, loginUser));
+        const store = createStore(reducer, initialState, applyMiddleware(createPost, getPosts, deletePost, editPost, loginUser, logoutUser));
         const context = {};
         const body = renderToString(
             <Provider store={store}>

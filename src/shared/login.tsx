@@ -1,7 +1,7 @@
 import React, {FormEvent} from 'react';
 import userReducer from "../reducers/userReducer";
 import {connect} from "react-redux";
-import {getUser } from "../actions/userActions";
+import {getUser, logout} from "../actions/userActions";
 
 interface ILoginProps {
     user: {
@@ -9,6 +9,7 @@ interface ILoginProps {
         email: string;
     },
     login: (email: string, password: string) => void;
+    logout: () => void;
 }
 
 class Login extends React.Component<ILoginProps, {}> {
@@ -34,11 +35,17 @@ class Login extends React.Component<ILoginProps, {}> {
         this.props.login(this.email.value, this.password.value);
     }
 
+    onLogout(e: FormEvent<HTMLElement>) {
+        e.preventDefault();
+        this.props.logout();
+    }
+
     render() {
         if (this.props.user.id && this.props.user.email) {
             return (
                 <div>
                     <span>Welcome {this.props.user.email}</span>
+                    <button onClick={this.onLogout.bind(this)}>logout</button>
                 </div>
             )
         }
@@ -69,6 +76,9 @@ const mapDispatchToProps = (dispatch: any) => {
     return {
         login(email: string, password: string){
             dispatch(getUser({ email, password }));
+        },
+        logout() {
+            dispatch(logout());
         }
     }
 };
