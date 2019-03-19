@@ -3,7 +3,7 @@ import {IPost} from "./posts";
 import PostForm from "./postForm";
 import {connect} from "react-redux";
 import userReducer from "../../reducers/userReducer";
-import {editPost} from "../../actions/postActions";
+import {editPost, sendEdit} from "../../actions/postActions";
 
 interface IEditPost {
     post: IPost;
@@ -11,7 +11,7 @@ interface IEditPost {
         id: string;
         email: string;
     }
-    editPost: (post: { id: string, title: string, body: string}) => void;
+    sendEdit: (post: IPost) => void;
 }
 
 class EditPost extends React.Component<IEditPost,{ title: string, body: string }> {
@@ -21,13 +21,19 @@ class EditPost extends React.Component<IEditPost,{ title: string, body: string }
     }
 
     updatePost(e: FormEvent<HTMLElement>, title: string, body: string) {
+        e.preventDefault();
         const postData = {
             id: this.props.post.id,
             title,
             body,
+            author: {
+                email: this.props.user.email,
+                id: parseInt(this.props.user.id),
+            },
+            edit: false,
         };
 
-        this.props.editPost(postData);
+        this.props.sendEdit(postData);
     }
 
     render() {
@@ -49,9 +55,9 @@ const mapStateToProps = (state: any, action: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        editPost(post: { id: string, title: string, body: string }) {
-            dispatch(editPost(post))
-        }
+        sendEdit(post: IPost){
+            dispatch(sendEdit(post))
+        },
     }
 };
 

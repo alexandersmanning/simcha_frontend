@@ -2,13 +2,15 @@ import React, {DOMElement, FormEvent} from 'react';
 import AddPost from "./addPost";
 import postReducer from "../../reducers/postReducer";
 import {connect} from "react-redux";
-import {deletePost, getPosts, receivePosts} from "../../actions/postActions";
+import {deletePost, editPost, getPosts, receivePosts} from "../../actions/postActions";
 import userReducer from "../../reducers/userReducer";
+import EditPostComponent from "./editPost";
 
 export interface IPost {
     id: string,
     title: string;
     body: string;
+    edit: boolean;
     author: {
         id: number,
         email: string
@@ -20,6 +22,7 @@ interface IPostProps {
     user: { id: number, email: string };
     getPosts: () => void;
     deletePost: (id: number) => void;
+    editPost: (id: number) => void;
 }
 
 class Posts extends React.Component<IPostProps, {}> {
@@ -36,6 +39,11 @@ class Posts extends React.Component<IPostProps, {}> {
         this.props.deletePost(id);
     }
 
+    handleEdit(e: FormEvent<HTMLElement>, id: number) {
+        e.preventDefault();
+        this.props.editPost(id);
+    }
+
     allowDelete(post: IPost) {
         return this.props.user && post && this.props.user.id === post.author.id;
     }
@@ -46,17 +54,27 @@ class Posts extends React.Component<IPostProps, {}> {
                 {
                     this.props.posts.map((post: IPost) => {
                         return (
-                            <div>
-                                <div>Email: {post.author.email}</div>
-                                <div>Title: {post.title}</div>
-                                <div>Body: {post.body}</div>
-                                {
-                                    this.allowDelete.call(this, post) &&
-                                    <button onClick={(e) => {
-                                        this.handleDelete.call(this, e, post.id)
-                                    }}>Delete Post</button>
-                                }
-                            </div>
+                            post.edit ?
+                                <EditPostComponent post={post} user={post.author} />
+                                :
+                                <div>
+                                    <div>Email: {post.author.email}</div>
+                                    <div>Title: {post.title}</div>
+                                    <div>Body: {post.body}</div>
+                                    {
+                                        this.allowDelete.call(this, post) &&
+                                        <button onClick={(e) => {
+                                            this.handleDelete.call(this, e, post.id)
+                                        }}>Delete Post</button>
+                                    }
+                                    {
+                                        this.allowDelete.call(this, post) &&
+                                        !post.edit &&
+                                        <button onClick={(e) => {
+                                            this.handleEdit.call(this, e, post.id)
+                                        }}>Edit Post</button>
+                                    }
+                                </div>
                         )
                     })
                 }
@@ -81,6 +99,9 @@ const mapDispatchToProps = (dispatch: any) => {
         deletePost: (id: number) => {
             dispatch(deletePost(id))
         },
+        editPost: (id: number) => {
+            dispatch(editPost(id))
+        }
     }
 };
 

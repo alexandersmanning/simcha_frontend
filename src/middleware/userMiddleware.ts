@@ -5,8 +5,9 @@ import {handleCSRF} from "../utils/middlewareHelpers";
 
 export const loginUser = (store: any) => (next: Dispatch<AnyAction>) => (action: any) => {
     if (action.type !== GET_USER) return next(action);
+    const csrfToken = store.getState().token;
 
-    simchaFetch('login', { method: 'POST', body: action.payload })
+    simchaFetch('login', { method: 'POST', body: action.payload, csrfToken })
         .then(({ token, data }: { token: string, data: any }) => {
             handleCSRF(store, token);
             store.dispatch(setUser(data));

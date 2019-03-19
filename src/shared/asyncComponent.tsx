@@ -19,8 +19,6 @@ const asyncComponent = (getComponent: any) => {
             if (Component) {
                 return <Component {...this.props} />
             }
-            // @ts-ignore
-            console.log(__isBrowser__);
             return null
         }
     };

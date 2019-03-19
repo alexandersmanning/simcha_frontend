@@ -3,7 +3,7 @@ import {
     CREATE_POST,
     DELETE_POST, EDIT_POST,
     GET_POSTS,
-    receivePosts,
+    receivePosts, SEND_EDIT,
     updatePost
 } from "../actions/postActions";
 import {IPost} from "../shared/postComponents/posts";
@@ -20,7 +20,17 @@ export const getPosts = (store: any) => (next: Dispatch<AnyAction>) => (action: 
             const statePosts:IPost[] = [];
             if (!data) return;
             data.forEach((post: IPost) => {
-                statePosts.push({ author: { id: post.author.id, email: post.author.email }, body: post.body, title: post.title, id: post.id })
+                statePosts.push({
+                    author:
+                        {
+                            id: post.author.id,
+                            email: post.author.email
+                        },
+                    body: post.body,
+                    title: post.title,
+                    id: post.id,
+                    edit: false
+                })
             });
 
             store.dispatch(receivePosts(statePosts));
@@ -34,7 +44,13 @@ export const createPost = (store: any) => (next: Dispatch<AnyAction>) => (action
     simchaFetch('posts', { method: 'POST', body: action.payload, csrfToken })
         .then(({ token, data }: { token: string, data: IPost }) => {
             handleCSRF(store, token);
-            store.dispatch(addPost(data));
+            store.dispatch(addPost(
+                Object.assign(
+                    {},
+                    data,
+                    { edit: false}
+                )
+            ));
             action.callback();
         }).catch((err: Error) => {
             console.log(err);
@@ -55,13 +71,19 @@ export const deletePost = (store: any) => (next: Dispatch<AnyAction>) => (action
 };
 
 export const editPost = (store: any) => (next: Dispatch<AnyAction>) => (action: any) => {
-    if (action.type !== EDIT_POST) return next(action);
+    if (action.type !== SEND_EDIT) return next(action);
     const csrfToken = store.getState().token;
 
-    simchaFetch(`posts/${action.payload.id}`, { method: 'PUT', csrfToken, body: JSON.stringify(action.payload.post) })
+    simchaFetch(`posts/${action.payload.id}`, { method: 'PUT', csrfToken, body: action.payload })
         .then(({ token }: { token: string }) => {
             handleCSRF(store, token);
-            store.dispatch(updatePost(action.payload));
+            store.dispatch(updatePost(
+                Object.assign(
+                    {},
+                    action.payload,
+                    { edit: false })
+                )
+            );
         })
         .catch((err) => {
             console.log(err);

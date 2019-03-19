@@ -7,6 +7,7 @@ export const DELETE_POST = 'DELETE_POST';
 export const RECEIVE_POSTS = 'RECEIVE_POSTS';
 export const GET_POSTS = 'GET_POSTS';
 export const CREATE_POST = 'CREATE_POST';
+export const SEND_EDIT = 'SEND_EDIT';
 
 export const createPost = (post: { title: string, body: string }, callback: () => void) => {
     return {
@@ -43,9 +44,16 @@ export const deletePost = (id: number) => {
     }
 };
 
-export const editPost = (post: { id: string, title: string, body: string }) => {
+export const editPost = (id: number) => {
     return {
         type: EDIT_POST,
+        payload: id,
+    }
+};
+
+export const sendEdit = (post: IPost) => {
+    return {
+        type: SEND_EDIT,
         payload: post,
     }
 };
