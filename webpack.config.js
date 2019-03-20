@@ -9,8 +9,7 @@ const browserConfig = {
     devtool: 'source-map',
     output: {
         path: path.resolve(__dirname, 'dist', 'js'),
-        filename: '[name].bundle.js',
-        chunkFilename: '[name].chunk.js',
+        filename: 'main.bundle.js',
         publicPath: '/dist/js/',
     },
     resolve: {

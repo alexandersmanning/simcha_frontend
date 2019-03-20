@@ -7,7 +7,7 @@ import userReducer from "../../reducers/userReducer";
 import EditPostComponent from "./editPost";
 
 export interface IPost {
-    id: string,
+    id: number,
     title: string;
     body: string;
     edit: boolean;

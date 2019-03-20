@@ -1,8 +1,8 @@
 import {
     addPost,
     CREATE_POST,
-    DELETE_POST, EDIT_POST,
-    GET_POSTS,
+    DELETE_POST,
+    GET_POSTS, IDeletePostAction, IEditPostAction, IGetPostsAction, ISendEditAction,
     receivePosts, SEND_EDIT,
     updatePost
 } from "../actions/postActions";
@@ -11,7 +11,7 @@ import {AnyAction, Dispatch} from "redux";
 import {handleCSRF} from "../utils/middlewareHelpers";
 import {simchaFetch} from "../utils/fetchUtil";
 
-export const getPosts = (store: any) => (next: Dispatch<AnyAction>) => (action: any) => {
+export const getPosts = (store: any) => (next: Dispatch<AnyAction>) => (action: IGetPostsAction) => {
     if (action.type !== GET_POSTS) return next(action);
 
     simchaFetch('posts', { method: 'GET' })
@@ -57,7 +57,7 @@ export const createPost = (store: any) => (next: Dispatch<AnyAction>) => (action
         })
 };
 
-export const deletePost = (store: any) => (next: Dispatch<AnyAction>) => (action: any) => {
+export const deletePost = (store: any) => (next: Dispatch<AnyAction>) => (action: IDeletePostAction) => {
     if (action.type !== DELETE_POST) return next(action);
     const csrfToken = store.getState().token;
 
@@ -70,7 +70,7 @@ export const deletePost = (store: any) => (next: Dispatch<AnyAction>) => (action
         });
 };
 
-export const editPost = (store: any) => (next: Dispatch<AnyAction>) => (action: any) => {
+export const editPost = (store: any) => (next: Dispatch<AnyAction>) => (action: ISendEditAction) => {
     if (action.type !== SEND_EDIT) return next(action);
     const csrfToken = store.getState().token;
 

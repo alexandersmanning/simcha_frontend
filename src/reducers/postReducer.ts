@@ -1,7 +1,7 @@
-import {ADD_POST, DELETE_POST, EDIT_POST, RECEIVE_POSTS, UPDATE_POST} from "../actions/postActions";
+import {ADD_POST, DELETE_POST, EDIT_POST, PostActions, RECEIVE_POSTS, UPDATE_POST} from "../actions/postActions";
 import {IPost} from "../shared/postComponents/posts";
 
-const postReducer = (state: IPost[] = [], action: any) => {
+const postReducer = (state: IPost[] = [], action: PostActions) => {
     let idx: number;
     switch(action.type) {
         case ADD_POST:

@@ -1,43 +1,18 @@
 import React from 'react';
 import {Route, Switch} from "react-router";
 import LoginComponent from './login'
-import asyncComponent from "./asyncComponent";
-
-const AboutComponent = asyncComponent(() => (
-    // @ts-ignore
-    System.import( /* webpackChunkName: "about" */ '../app/components/about').then((module: any) => {
-        return module.About;
-    })
-));
-
-const Posts = asyncComponent(() => {
-    // @ts-ignore
-    return System.import(/* webpackChunkName: "posts" */ './postComponents/posts').then((module: any) => {
-        return module.default;
-    });
-});
-
-const UserForm = asyncComponent(() => {
-    // @ts-ignore
-    return System.import(/* webpackChunkName: "createUser" */ './createUser').then((module: any) => {
-        return module.default;
-    });
-});
-
-const Hello = asyncComponent(() => {
-    // @ts-ignore
-    return System.import(/* webpackChunkName: "hello" */ './hello').then((module: any) => {
-        return module.Hello;
-    });
-});
+import {About} from '../app/components/about';
+import PostComponent from './postComponents/posts';
+import UserForm from './createUser';
+import { Hello } from './hello'
 
 export default () => {
     return (
         <div>
             <LoginComponent/>
             <Switch>
-                <Route path="/about/:userId" exact component={AboutComponent}/>
-                <Route path="/posts" exact component={Posts}/>
+                <Route path="/about/:userId" exact component={About}/>
+                <Route path="/posts" exact component={PostComponent}/>
                 <Route path="/newAccount" component={UserForm}/>
                 <Route path="/:userId" exact component={Hello}/>
             </Switch>
