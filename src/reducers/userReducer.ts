@@ -1,15 +1,17 @@
-interface IUserAction {
-    type: string,
-    payload: {
-        id: string,
-        email: string
-    }
+import {UsersActions} from "../actions/userActions";
+
+export interface IUserState {
+    id?: number;
+    email?: string;
 }
 
-const userReducer = (state = {}, action: IUserAction) => {
+const userReducer = (state: IUserState = {}, action: UsersActions) => {
     switch(action.type) {
         case 'SET_USER':
-            return Object.assign({}, state, { id: action.payload.id, email: action.payload.email });
+            return Object.assign(
+                {},
+                state,
+                { id: action.payload.id, email: action.payload.email });
         case 'LOGOUT':
             return {};
         default:

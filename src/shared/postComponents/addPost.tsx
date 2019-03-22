@@ -1,14 +1,14 @@
 import React, {FormEvent} from 'react';
-import userReducer from "../../reducers/userReducer";
+import userReducer, {IUserState} from "../../reducers/userReducer";
 import {connect} from "react-redux";
 import {createPost} from "../../actions/postActions";
 import PostForm from './postForm';
+import {IApplicationState} from "../../reducer";
+import {UsersActions} from "../../actions/userActions";
+import {Dispatch} from "redux";
 
 interface IAddPostProps {
-    user: {
-        id: string;
-        email: string;
-    },
+    user: IUserState;
     createPost: (post: { body: string, title: string }, callback: () => void) => void,
 }
 
@@ -46,13 +46,13 @@ class AddPost extends React.Component<IAddPostProps, { title: string, body: stri
     }
 }
 
-const mapStateToProps = (state: any, action: any) => {
+const mapStateToProps = (state: IApplicationState, action: UsersActions) => {
     return {
         user: userReducer(state.user, action),
     };
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
         createPost(post: { body: string, title: string }, callback: () => void) {
             dispatch(createPost(post, callback));

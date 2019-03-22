@@ -1,6 +1,8 @@
-import {SET_TOKEN} from "../actions/tokenActions";
+import {SET_TOKEN, TokenActions} from "../actions/tokenActions";
 
-export default (state = '', action: { type: string, payload: string, }) => {
+export type TokenState = string;
+
+export default (state: TokenState = '', action: TokenActions) => {
     switch(action.type) {
         case SET_TOKEN:
             return action.payload;

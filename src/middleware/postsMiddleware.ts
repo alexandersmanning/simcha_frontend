@@ -2,7 +2,7 @@ import {
     addPost,
     CREATE_POST,
     DELETE_POST,
-    GET_POSTS, IDeletePostAction, IEditPostAction, IGetPostsAction, ISendEditAction,
+    GET_POSTS, IDeletePostAction, IGetPostsAction, ISendEditAction,
     receivePosts, SEND_EDIT,
     updatePost
 } from "../actions/postActions";

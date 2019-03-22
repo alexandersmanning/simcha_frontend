@@ -2,15 +2,15 @@ import React, {FormEvent} from 'react';
 import {IPost} from "./posts";
 import PostForm from "./postForm";
 import {connect} from "react-redux";
-import userReducer from "../../reducers/userReducer";
-import {editPost, sendEdit} from "../../actions/postActions";
+import userReducer, {IUserState} from "../../reducers/userReducer";
+import {sendEdit} from "../../actions/postActions";
+import {IApplicationState} from "../../reducer";
+import {IGetUserAction} from "../../actions/userActions";
+import {Dispatch} from "redux";
 
 interface IEditPost {
     post: IPost;
-    user: {
-        id: string;
-        email: string;
-    }
+    user: IUserState;
     sendEdit: (post: IPost) => void;
 }
 
@@ -28,7 +28,7 @@ class EditPost extends React.Component<IEditPost,{ title: string, body: string }
             body,
             author: {
                 email: this.props.user.email,
-                id: parseInt(this.props.user.id),
+                id: this.props.user.id,
             },
             edit: false,
         };
@@ -47,13 +47,13 @@ class EditPost extends React.Component<IEditPost,{ title: string, body: string }
     }
 }
 
-const mapStateToProps = (state: any, action: any) => {
+const mapStateToProps = (state: IApplicationState, action: IGetUserAction) => {
     return {
         user: userReducer(state.user, action),
     }
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
         sendEdit(post: IPost){
             dispatch(sendEdit(post))

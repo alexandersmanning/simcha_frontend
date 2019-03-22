@@ -1,20 +1,19 @@
-import React, {DOMElement, FormEvent} from 'react';
+import React, {FormEvent} from 'react';
 import AddPost from "./addPost";
 import postReducer from "../../reducers/postReducer";
 import {connect} from "react-redux";
-import {deletePost, editPost, getPosts, receivePosts} from "../../actions/postActions";
-import userReducer from "../../reducers/userReducer";
+import {deletePost, editPost, getPosts} from "../../actions/postActions";
+import userReducer, {IUserState} from "../../reducers/userReducer";
 import EditPostComponent from "./editPost";
+import {IApplicationState} from "../../reducer";
+import {Dispatch} from "redux";
 
 export interface IPost {
     id: number,
     title: string;
     body: string;
     edit: boolean;
-    author: {
-        id: number,
-        email: string
-    }
+    author: IUserState;
 }
 
 interface IPostProps {
@@ -55,7 +54,7 @@ class Posts extends React.Component<IPostProps, {}> {
                     this.props.posts.map((post: IPost) => {
                         return (
                             post.edit ?
-                                <EditPostComponent post={post} user={post.author} />
+                                <EditPostComponent post={post} user={post.author}/>
                                 :
                                 <div>
                                     <div>Email: {post.author.email}</div>
@@ -84,14 +83,14 @@ class Posts extends React.Component<IPostProps, {}> {
     }
 }
 
-const mapStateToProps = (state: any, action: any) => {
+const mapStateToProps = (state: IApplicationState, action: any) => {
     return {
         posts: postReducer(state.posts, action),
         user: userReducer(state.user, action),
     }
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
         getPosts: () => {
             dispatch(getPosts())
